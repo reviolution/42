@@ -1,0 +1,75 @@
+#include <stdio.h>
+#include <string.h>
+
+void dec_str_add(char *dest, char *num1, char *num2, int length);
+char* dec_str_mult(char* num1, char* num2, int length);
+void init_num(char* dest, char* origin, int numlength, int origin_length);
+void empty_num_arr(char* arr, int numlength);
+void num_with_offset(char* dest, int num, int offset);
+
+int main() {
+    int numlength = 6;
+    char num1[numlength];
+    char num2[numlength];
+    char num1neg = 0;
+    char num2neg = 0;
+    init_num(num1, "321", numlength, 3);
+    init_num(num2, "321", numlength, 3);
+    dec_str_mult(num1, num2, numlength);
+}
+
+void string_to_num(char* dest, char* origin, int numlength, int origin_length){
+    for(int i = origin_length; i < numlength; i++){
+        dest[i] = 0;
+    }
+    for(int i = 0; i < origin_length; i++){
+        dest[i] = origin[origin_length - i - 1] - 48;
+    }
+}
+
+void empty_num_arr(char* arr, int numlength){
+    for(int i = 0; i < numlength; i++){
+        arr[i] = 0;
+    }
+}
+
+void num_with_offset(char* dest, int num, int offset){
+    //Only works for num < 100 and at positions in bounds
+    dest[offset] = num % 10;
+    dest[offset + 1] = num / 10;
+}
+
+void dec_str_add(char *dest, char *num1, char *num2, int length) {
+    //Addiert beide Werte, ignoriert jeweils die "erste" Stelle
+    char zwischenspeicher[length];
+    for(int i = 0; i < length; i++){
+        zwischenspeicher[i] = 0;
+    }
+
+    for(int i = 0; i < length - 1; i++){
+        int erg = num1[i] + num2[i] + zwischenspeicher[i];
+        zwischenspeicher[i] = erg % 10;
+        zwischenspeicher[i + 1] = erg / 10;
+    }
+
+    for(int i = 0; i < length; i++){
+        dest[i] = zwischenspeicher[i];
+    }
+}
+
+char* decimal_mult(char* num1, char* num2, int length){
+    //Multipliziert zwei Zahlen. Ignoriert jeweils "erste" Hälfte der Zahlen
+    char zwischenspeicher[length];
+    empty_num_arr(zwischenspeicher, length);
+
+    for(int i = 0; i < length / 2; i++){
+        for (int j = 0; j < length / 2; j++) {
+            char temp[length];
+            empty_num_arr(temp, length);
+            num_with_offset(temp, num1[i]*num2[j], i+j);
+            decimal_add(zwischenspeicher, zwischenspeicher, temp, length);
+        }
+    }
+    printf("test");
+    return zwischenspeicher;
+}
